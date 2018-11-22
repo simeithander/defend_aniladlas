@@ -9,8 +9,8 @@ pygame.display.set_caption("Search and kill aniladlas")
 background_img = pygame.image.load("arquivos/middleground.png")
 heroi_x = 10
 heroi_y = 430
-vel_x = 0.25
-vel_y = 0.25
+vel_x = 1
+vel_y = 1
 altura_pulo = 100
 
 #blocos
@@ -36,10 +36,10 @@ def lodo(lodo_x,lodo_y):
     lodo.set_colorkey((255,0,255))
     display.blit(lodo, lodorect)
 
-def heroi(x,y):
+def heroi(heroi_x,heroi_y):
   heroi = pygame.image.load("arquivos/player/player-idle/player-idle-1.png")
   heroirect = heroi.get_rect()
-  heroirect.center = (x,y)
+  heroirect.center = (heroi_x,heroi_y)
   heroi.set_colorkey((255, 0, 255))
   display.blit(heroi, heroirect)
 
@@ -87,8 +87,9 @@ while True:
     if e.type == pygame.QUIT:
         pygame.quit()
         sys.exit()
-    print(e)
+    #print(e)
   cenario()
+  heroi(heroi_x, heroi_y)
   controles(heroi)
 
   pygame.display.flip()
