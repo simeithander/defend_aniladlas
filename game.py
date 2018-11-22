@@ -88,7 +88,7 @@ while True:
         pygame.quit()
         sys.exit()
     print(e)
-
-  pygame.display.flip()
   cenario()
   controles(heroi)
+
+  pygame.display.flip()
