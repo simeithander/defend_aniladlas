@@ -8,10 +8,10 @@ pygame.init()
 
 size = width, height = 640, 480
 display = pygame.display.set_mode(size)
-pygame.display.set_caption("Search and kill aniladlas")
+pygame.display.set_caption("Defeat aniladlas - IFRN-CNAT-2018.2")
 background_img = pygame.image.load("arquivos/middleground.png")
-heroi_x = 10
-heroi_y = 430
+heroi_x = 15
+heroi_y = 425
 vel_x = 1
 vel_y = 1
 altura_pulo = 100
