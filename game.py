@@ -1,6 +1,9 @@
 import pygame, sys
 from pygame.locals import *
 
+## Game Defend aniladlas, desenvolvido por Simei Thander e Rafael Crisostomos
+## IFRN - CNAT - TADS 2018.2
+
 pygame.init()
 
 size = width, height = 640, 480
