@@ -77,10 +77,10 @@ def draw_char():
     if walk_count + 1 >= 14:
         walk_count = 0
     if right:
-        win.blit(walk_right[walk_count//3], (x,y))
+        win.blit(walk_left[walk_count//3], (x,y))
         walk_count +=1
     elif left:
-        win.blit(walk_left[walk_count//3], (x,y))
+        win.blit(walk_right[walk_count//3], (x,y))
         walk_count +=1
     else:
         win.blit(char, (x,y))
