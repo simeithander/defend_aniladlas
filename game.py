@@ -77,10 +77,11 @@ def draw_char():
     if walk_count + 1 >= 14:
         walk_count = 0
     if left:
-        win.blit(walk_left[walk_count//3], (x,y))
-        walk_count +=1
-    elif right:
         win.blit(walk_right[walk_count//3], (x,y))
+        walk_count +=1
+        
+    elif right:
+        win.blit(walk_left[walk_count//3], (x,y))
         walk_count +=1
     else:
         win.blit(char, (x,y))
@@ -96,12 +97,12 @@ def move_char():
     #A condição após o AND limita o personagem para nao sair da tela
     if keys[pygame.K_LEFT] and x > vel:
         x -= vel
-        left = True
         right = False
+        left = True
     elif keys[pygame.K_RIGHT] and x < display_width - width - vel:
         x += vel
-        left = False
         right = True
+        left = False
     else:
         right = False
         left = False
