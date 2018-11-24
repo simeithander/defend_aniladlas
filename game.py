@@ -76,11 +76,10 @@ def draw_char():
     #define a animação de movimento do personagem
     if walk_count + 1 >= 14:
         walk_count = 0
-    if left:
+    if right:
         win.blit(walk_right[walk_count//3], (x,y))
         walk_count +=1
-        
-    elif right:
+    elif left:
         win.blit(walk_left[walk_count//3], (x,y))
         walk_count +=1
     else:
