@@ -35,6 +35,8 @@ left = False
 right = False
 #contagem de passos
 walk_count = 0
+#estado do botão left:
+press_left = False
 #Função para fechar o Game se precionado a de fechar
 def close_game():
     global run
@@ -53,17 +55,12 @@ def draw_scenario():
     win.blit(bg2,(0,0))
 #desenha o personagem
 def draw_char():
-    global x, y, width, height, walk_count, left, right
+    global x, y, width, height, walk_count, left, right, press_left
+    #obtem as teclas
+    keys = pygame.key.get_pressed()
     #carrega os sprites do personagem
-    walk_right = [pygame.image.load("arquivos/player/player-skip/p_right_1.png"),
-    pygame.image.load("arquivos/player/player-skip/p_right_2.png"),
-    pygame.image.load("arquivos/player/player-skip/p_right_3.png"),
-    pygame.image.load("arquivos/player/player-skip/p_right_4.png"),
-    pygame.image.load("arquivos/player/player-skip/p_right_5.png"),
-    pygame.image.load("arquivos/player/player-skip/p_right_6.png"),
-    pygame.image.load("arquivos/player/player-skip/p_right_7.png"),
-    pygame.image.load("arquivos/player/player-skip/p_right_8.png")]
-    walk_left = [pygame.image.load("arquivos/player/player-skip/p_left_1.png"),
+    walk_right = [
+    pygame.image.load("arquivos/player/player-skip/p_left_1.png"),
     pygame.image.load("arquivos/player/player-skip/p_left_2.png"),
     pygame.image.load("arquivos/player/player-skip/p_left_3.png"),
     pygame.image.load("arquivos/player/player-skip/p_left_4.png"),
@@ -71,25 +68,40 @@ def draw_char():
     pygame.image.load("arquivos/player/player-skip/p_left_6.png"),
     pygame.image.load("arquivos/player/player-skip/p_left_7.png"),
     pygame.image.load("arquivos/player/player-skip/p_left_8.png")]
+    walk_left = [
+    pygame.image.load("arquivos/player/player-skip/p_right_1.png"),
+    pygame.image.load("arquivos/player/player-skip/p_right_2.png"),
+    pygame.image.load("arquivos/player/player-skip/p_right_3.png"),
+    pygame.image.load("arquivos/player/player-skip/p_right_4.png"),
+    pygame.image.load("arquivos/player/player-skip/p_right_5.png"),
+    pygame.image.load("arquivos/player/player-skip/p_right_6.png"),
+    pygame.image.load("arquivos/player/player-skip/p_right_7.png"),
+    pygame.image.load("arquivos/player/player-skip/p_right_8.png")]
     #sprite IDEL (parado)
-    char = pygame.image.load("arquivos/player/player-idle/player-idle-1.png")
+    char_right_idle = pygame.image.load("arquivos/player/player-idle/p_right_idle.png")
+    char_left_idle = pygame.image.load("arquivos/player/player-idle/p_left_idle.png")
     #define a animação de movimento do personagem
     if walk_count + 1 >= 14:
         walk_count = 0
-    if right:
-        win.blit(walk_left[walk_count//3], (x,y))
-        walk_count +=1
-    elif left:
-        win.blit(walk_right[walk_count//3], (x,y))
-        walk_count +=1
+    if press_left:
+        char_position = char_left_idle
+        if left:
+            char_position = walk_left[walk_count//3]
+            walk_count +=1
+            press = True
     else:
-        win.blit(char, (x,y))
+        char_position = char_right_idle
+        if right:
+            char_position = walk_right[walk_count//3]
+            walk_count +=1
+            press = True
+    win.blit(char_position, (x,y))
     pygame.display.update()
     #atualiza o plano de fundo
     win.fill((0,0,0))
 #Define a movimentação do personagem
 def move_char():
-    global x, y, width, height, win, is_jump, jump_count, max_jump, left, right
+    global x, y, width, height, win, is_jump, jump_count, max_jump, left, right,press_left
     #Armazena na variável key a tecla pressionada
     keys = pygame.key.get_pressed()
     #Altera as variáveis de acordo com a tecla pressionada
@@ -98,10 +110,12 @@ def move_char():
         x -= vel
         right = False
         left = True
+        press_left = True
     elif keys[pygame.K_RIGHT] and x < display_width - width - vel:
         x += vel
         right = True
         left = False
+        press_left = False
     else:
         right = False
         left = False
@@ -137,5 +151,7 @@ while run:
     move_char()
     #função: fechar o game
     close_game()
+    print("Left:",left)
+    print("Right:",right)
 #encerra o Pygame
 pygame.quit()
