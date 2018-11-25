@@ -19,10 +19,10 @@ pygame.display.set_caption("Defend Aniladlas")
 #Define algumas variáveis para altura, largura, coordenada X e Y, velocidade
 x = 50
 y = 420
-width = 37
-height = 32
+width = 64
+height = 55
 #Velocidade
-vel = 10
+vel = 7
 #Define que o loop começará verdadeiro
 run = True
 #Define a condição do pulo
@@ -142,7 +142,7 @@ def move_char():
 #Define o loop principal
 while run:
     #define os frames per seconds do jogo
-    clock.tick(26)
+    clock.tick(60)
     #desenha o cenario:
     draw_scenario()
     #chama a função que desenha o personagem
@@ -151,7 +151,5 @@ while run:
     move_char()
     #função: fechar o game
     close_game()
-    print("Left:",left)
-    print("Right:",right)
 #encerra o Pygame
 pygame.quit()
