@@ -17,12 +17,12 @@ win = pygame.display.set_mode((display_width, display_height))
 #Seta o nome do game na barra superior de titulos
 pygame.display.set_caption("Defend Aniladlas")
 #Define algumas variáveis para altura, largura, coordenada X e Y, velocidade
-x = 50
-y = 420
+x = 15
+y = 398
 width = 64
 height = 55
 #Velocidade
-vel = 7
+vel = 10
 #Define que o loop começará verdadeiro
 run = True
 #Define a condição do pulo
@@ -53,6 +53,13 @@ def draw_scenario():
     win.blit(bg,(0,0))
     bg2 = pygame.image.load("arquivos/bg2.png")
     win.blit(bg2,(0,0))
+    bloco = pygame.image.load("arquivos/bloco.jpg")
+    house = pygame.image.load("arquivos/house.png")
+    win.blit(house,(50,211))
+    cont = 0
+    for i in range(0,31):
+        win.blit(bloco,(cont,453))
+        cont += 32
 #desenha o personagem
 def draw_char():
     global x, y, width, height, walk_count, left, right, press_left
@@ -81,7 +88,7 @@ def draw_char():
     char_right_idle = pygame.image.load("arquivos/player/player-idle/p_right_idle.png")
     char_left_idle = pygame.image.load("arquivos/player/player-idle/p_left_idle.png")
     #define a animação de movimento do personagem
-    if walk_count + 1 >= 14:
+    if walk_count + 1 >= 16:
         walk_count = 0
     if press_left:
         char_position = char_left_idle
@@ -140,6 +147,7 @@ def move_char():
             is_jump = False
             jump_count = max_jump
 #Define o loop principal
+
 while run:
     #define os frames per seconds do jogo
     clock.tick(60)
