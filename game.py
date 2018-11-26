@@ -22,7 +22,7 @@ y = 398
 width = 64
 height = 55
 #Velocidade
-vel = 10
+vel = 8
 #Define que o loop começará verdadeiro
 run = True
 #Define a condição do pulo
@@ -37,22 +37,26 @@ right = False
 walk_count = 0
 #estado do botão left:
 press_left = False
+#Condição de inicialização do Game
+start_game = False
+
+#background do jogo
+def bg():
+    #Define o background do jogo
+    win.blit(pygame.image.load("arquivos/bg.jpg"),(0,0))
 #Função para fechar o Game se precionado a de fechar
 def close_game():
-    global run
+    global run, start_game
     #Define um laço para os eventos do jogo
     for event in pygame.event.get():
         #Se o tipo do evento for igual a QUIT, a variavel run receberá falso
         if event.type == pygame.QUIT:
             run = False
+            start_game = True
     return run
 #Desenha o cenário
 def draw_scenario():
-    #Define o background do jogo
-    bg = pygame.image.load("arquivos/bg.png")
-    win.blit(bg,(0,0))
-    bg2 = pygame.image.load("arquivos/bg2.png")
-    win.blit(bg2,(0,0))
+    bg()
     bloco = pygame.image.load("arquivos/bloco.jpg")
     house = pygame.image.load("arquivos/house.png")
     win.blit(house,(50,211))
@@ -103,6 +107,7 @@ def draw_char():
             walk_count +=1
             press = True
     win.blit(char_position, (x,y))
+    #atualiza os frames
     pygame.display.update()
     #atualiza o plano de fundo
     win.fill((0,0,0))
@@ -146,8 +151,25 @@ def move_char():
         else:
             is_jump = False
             jump_count = max_jump
-#Define o loop principal
 
+#Tela de Inicio
+while not start_game:
+    #Chama o background do jogo
+    bg()
+    #Mostra na tela as informações iniciais
+    win.blit(pygame.image.load("arquivos/infos.png"), (152,130))
+    #desenha a tecla enter
+    win.blit(pygame.image.load("arquivos/enter.png"), (192,360))
+    #desenha o logo da tela
+    win.blit(pygame.image.load("arquivos/logo.png"), (0,10))
+    #atualiza a tela
+    pygame.display.update()
+    #Verifica se o jogador clicou em Enter para iniciar o jogo
+    keys = pygame.key.get_pressed()
+    if keys[pygame.K_RETURN]:
+        start_game = True
+    close_game()
+#Define o loop principal
 while run:
     #define os frames per seconds do jogo
     clock.tick(60)
