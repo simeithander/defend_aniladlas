@@ -176,6 +176,8 @@ def move_char():
     #Se for pressionado a tecla de pulo, será realizado a condição abaixo:
     if not(is_jump):
         if keys[pygame.K_SPACE]:
+            pygame.mixer.music.load("arquivos/song/jump.mp3")
+            pygame.mixer.music.play(0)
             is_jump = True
             right = False
             left = False
@@ -208,6 +210,8 @@ while not start_game:
     keys = pygame.key.get_pressed()
     if keys[pygame.K_RETURN]:
         start_game = True
+        pygame.mixer.music.load("arquivos/song/star.mp3")
+        pygame.mixer.music.play(0)
     close_game()
 
 def draw():
