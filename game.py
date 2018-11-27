@@ -2,7 +2,6 @@
 Game Defend Aniladlas
 Alunos: Simei Thander e Rafael Crisostomos
 IFRN - TADS 2018.2 - www.ifrn.edu.br
-2019
 '''
 #importa o pygame
 import pygame
@@ -41,10 +40,16 @@ press_left = False
 #Condição de inicialização do Game
 start_game = False
 
-#background do jogo
-def bg():
-    #Define o background do jogo
-    win.blit(pygame.image.load("arquivos/bg.jpg"),(0,0))
+#váriaveis globais para oslug
+x_slug = 0
+y_slug = 410
+width_slug = 64
+height_slud = 42
+end_slug = 598
+walk_count_slug = 0
+vel_slug = 2
+patch_slug = [x_slug, end_slug]
+
 #Função para fechar o Game se precionado a de fechar
 def close_game():
     global run, start_game
@@ -55,9 +60,10 @@ def close_game():
             run = False
             start_game = True
     return run
+
 #Desenha o cenário
 def draw_scenario():
-    bg()
+    win.blit(pygame.image.load("arquivos/bg.jpg"),(0,0))
     bloco = pygame.image.load("arquivos/bloco.jpg")
     house = pygame.image.load("arquivos/house.png")
     win.blit(house,(50,211))
@@ -108,10 +114,44 @@ def draw_char():
             walk_count +=1
             press = True
     win.blit(char_position, (x,y))
-    #atualiza os frames
-    pygame.display.update()
-    #atualiza o plano de fundo
-    win.fill((0,0,0))
+#Cria o inimigo Slug
+def draw_enemy_slug():
+    global x_slug, y_slug, width_slug, height_slud, end_slug, walk_count_slug, vel_slug, patch_slug
+    walk_left = [
+    pygame.image.load("arquivos/monsters/slug/slug-left-1.png"),
+    pygame.image.load("arquivos/monsters/slug/slug-left-2.png"),
+    pygame.image.load("arquivos/monsters/slug/slug-left-3.png"),
+    pygame.image.load("arquivos/monsters/slug/slug-left-4.png"),]
+    walk_right = [
+    pygame.image.load("arquivos/monsters/slug/slug-right-1.png"),
+    pygame.image.load("arquivos/monsters/slug/slug-right-2.png"),
+    pygame.image.load("arquivos/monsters/slug/slug-right-3.png"),
+    pygame.image.load("arquivos/monsters/slug/slug-right-4.png"),]
+
+    #move o inimigo
+    if vel_slug > 0:
+        if x_slug + vel_slug < patch_slug[1]:
+            x_slug += vel_slug
+        else:
+            vel_slug = vel_slug * -1
+            walk_count_slug = 0
+    else:
+        if x_slug - vel_slug > patch_slug[0]:
+            x_slug += vel_slug
+        else:
+            vel_slug = vel_slug * -1
+            walk_count_slug = 0
+
+    #desenha o inimigo
+    if walk_count_slug + 1 >= 8:
+        walk_count_slug = 0
+    if vel_slug > 0:
+        win.blit(walk_right[walk_count_slug // 3],(x_slug, y_slug))
+        walk_count_slug += 1
+    else:
+        win.blit(walk_left[walk_count_slug // 3],(x_slug, y_slug))
+        walk_count_slug += 1
+
 #Define a movimentação do personagem
 def move_char():
     global x, y, width, height, win, is_jump, jump_count, max_jump, left, right,press_left
@@ -152,11 +192,10 @@ def move_char():
         else:
             is_jump = False
             jump_count = max_jump
-
 #Tela de Inicio
 while not start_game:
     #Chama o background do jogo
-    bg()
+    win.blit(pygame.image.load("arquivos/bg.jpg"),(0,0))
     #Mostra na tela as informações iniciais
     win.blit(pygame.image.load("arquivos/infos.png"), (152,130))
     #desenha a tecla enter
@@ -170,14 +209,20 @@ while not start_game:
     if keys[pygame.K_RETURN]:
         start_game = True
     close_game()
+
+def draw():
+    draw_char()
+    draw_enemy_slug()
+    pygame.display.update()
+
 #Define o loop principal
 while run:
     #define os frames per seconds do jogo
     clock.tick(60)
     #desenha o cenario:
     draw_scenario()
-    #chama a função que desenha o personagem
-    draw_char()
+    #chama a função que desenha os objetos animados
+    draw()
     #chama a funcao de mover o personagem
     move_char()
     #função: fechar o game
