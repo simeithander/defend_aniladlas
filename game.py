@@ -21,6 +21,7 @@ x = 15
 y = 398
 width = 64
 height = 55
+hitbox = (x+11, y, 39, 55)
 #Velocidade
 vel = 8
 #Define que o loop começará verdadeiro
@@ -44,11 +45,12 @@ start_game = False
 x_slug = 0
 y_slug = 410
 width_slug = 64
-height_slud = 42
+height_slug = 42
 end_slug = 598
 walk_count_slug = 0
 vel_slug = 2
 patch_slug = [x_slug, end_slug]
+hitbox_slug = (x_slug+5, y_slug+4, 50, height_slug-1)
 
 #Função para fechar o Game se precionado a de fechar
 def close_game():
@@ -73,7 +75,7 @@ def draw_scenario():
         cont += 32
 #desenha o personagem
 def draw_char():
-    global x, y, width, height, walk_count, left, right, press_left
+    global x, y, width, height, walk_count, left, right, press_left, hitbox
     #obtem as teclas
     keys = pygame.key.get_pressed()
     #carrega os sprites do personagem
@@ -114,6 +116,8 @@ def draw_char():
             walk_count +=1
             press = True
     win.blit(char_position, (x,y))
+    hitbox = (x+11, y, 39, 55)
+    pygame.draw.rect(win, (255,0,0), hitbox, 2)
 #Cria o inimigo Slug
 def draw_enemy_slug():
     global x_slug, y_slug, width_slug, height_slud, end_slug, walk_count_slug, vel_slug, patch_slug
@@ -151,6 +155,8 @@ def draw_enemy_slug():
     else:
         win.blit(walk_left[walk_count_slug // 3],(x_slug, y_slug))
         walk_count_slug += 1
+    hitbox_slug = (x_slug+5, y_slug+4, 50, height_slug-1)
+    pygame.draw.rect(win, (255,0,0), hitbox_slug, 2)
 
 #Define a movimentação do personagem
 def move_char():
@@ -176,8 +182,6 @@ def move_char():
     #Se for pressionado a tecla de pulo, será realizado a condição abaixo:
     if not(is_jump):
         if keys[pygame.K_SPACE]:
-            pygame.mixer.music.load("arquivos/song/jump.mp3")
-            pygame.mixer.music.play(0)
             is_jump = True
             right = False
             left = False
@@ -194,6 +198,9 @@ def move_char():
         else:
             is_jump = False
             jump_count = max_jump
+def hit():
+    print('hit')
+    
 #Tela de Inicio
 while not start_game:
     #Chama o background do jogo
@@ -210,8 +217,6 @@ while not start_game:
     keys = pygame.key.get_pressed()
     if keys[pygame.K_RETURN]:
         start_game = True
-        pygame.mixer.music.load("arquivos/song/star.mp3")
-        pygame.mixer.music.play(0)
     close_game()
 
 def draw():
