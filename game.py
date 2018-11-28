@@ -72,8 +72,9 @@ while run:
             if x_slug > hitbox[0] and x_slug < hitbox[0] + hitbox[2]:
                 cont += 1
                 print("hit: ", cont)
-                main = True
+                #se houver a colisão lateral, o jogo é reiniciado
                 home_screen = True
+                main = False
 
     #Desenha o cenário
     def draw_scenario():
@@ -224,11 +225,27 @@ while run:
 
     #Define o loop principal
     while main:
+        if not home_screen:
+            #define os frames per seconds do jogo
+            clock.tick(60)
+            #desenha o cenario:
+            draw_scenario()
+            #chama a função que desenha os objetos animados
+            draw()
+            #chama a funcao de mover o personagem
+            move_char()
+            #chama a colisão
+            colision()
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    main = False
+                    run = False
         while home_screen:
             for event in pygame.event.get():
-                #Se o tipo do evento for igual a QUIT, a variavel run receberá falso
                 if event.type == pygame.QUIT:
                     home_screen = False
+                    main = False
+                    run = False
             #Tela de Inicio
             #Chama o background do jogo
             win.blit(pygame.image.load("arquivos/bg.jpg"),(0,0))
@@ -246,19 +263,6 @@ while run:
                 home_screen = False
                 pygame.mixer.music.load("arquivos/song/star.mp3")
                 pygame.mixer.music.play()
-        #define os frames per seconds do jogo
-        clock.tick(60)
-        #desenha o cenario:
-        draw_scenario()
-        #chama a função que desenha os objetos animados
-        draw()
-        #chama a funcao de mover o personagem
-        move_char()
-        #chama a colisão
-        colision()
-        for event in pygame.event.get():
-            #Se o tipo do evento for igual a QUIT, a variavel run receberá falso
-            if event.type == pygame.QUIT:
-                run = False
+        
 #encerra o Pygame
 pygame.quit()
