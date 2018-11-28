@@ -6,6 +6,7 @@ IFRN - TADS 2018.2 - www.ifrn.edu.br
 import pygame, os, sys
 pygame.mixer.init()
 pygame.init()
+'''
 #define o mixer
 pygame.mixer.pre_init(44100, 16, 2, 5000)
 #define a musica de fundo
@@ -14,6 +15,7 @@ bg_music = pygame.mixer.Sound("arquivos/song/game_play.ogg")
 bg_music_play = bg_music .play(-1)
 #da play da musica
 bg_music_play.queue(bg_music)
+'''
 #obtem o clock do Pygame
 clock = pygame.time.Clock()
 #Define o tamanho da tela do jogo
@@ -49,14 +51,14 @@ press_left = False
 start_game = False
 
 #váriaveis globais para oslug
-x_slug = 0
+x_slug = 600
 y_slug = 410
 width_slug = 64
 height_slug = 42
-end_slug = 598
+end_slug = 0
 walk_count_slug = 0
 vel_slug = 2
-patch_slug = [x_slug, end_slug]
+patch_slug = [end_slug, x_slug]
 hitbox_slug = (x_slug+5, y_slug+4, 50, height_slug-1)
 
 #Função para fechar o Game se precionado a de fechar
@@ -232,6 +234,7 @@ while not start_game:
 
 def draw():
     draw_char()
+    draw_enemy_slug()
     draw_enemy_slug()
     pygame.display.update()
 
