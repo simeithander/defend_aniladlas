@@ -223,7 +223,7 @@ def draw():
     draw_char()
     draw_enemy_slug()
     pygame.display.update()
-
+    
 #Define o loop principal
 while run:
     #define os frames per seconds do jogo
