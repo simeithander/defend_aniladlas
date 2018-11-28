@@ -50,7 +50,7 @@ press_left = False
 #Condição de inicialização do Game
 start_game = False
 
-#váriaveis globais para oslug
+#váriaveis globais para o slug
 x_slug = 600
 y_slug = 410
 width_slug = 64
@@ -106,7 +106,7 @@ def draw_char():
     pygame.image.load("arquivos/player/player-skip/p_right_6.png"),
     pygame.image.load("arquivos/player/player-skip/p_right_7.png"),
     pygame.image.load("arquivos/player/player-skip/p_right_8.png")]
-    #sprite IDEL (parado)
+    #sprite Idle (parado)
     char_right_idle = pygame.image.load("arquivos/player/player-idle/p_right_idle.png")
     char_left_idle = pygame.image.load("arquivos/player/player-idle/p_left_idle.png")
     #define a animação de movimento do personagem
@@ -125,11 +125,14 @@ def draw_char():
             walk_count +=1
             press = True
     win.blit(char_position, (x,y))
+    #colisão
     hitbox = (x+11, y, 39, 55)
     pygame.draw.rect(win, (255,0,0), hitbox, 2)
+
 #Cria o inimigo Slug
 def draw_enemy_slug():
-    global x_slug, y_slug, width_slug, height_slud, end_slug, walk_count_slug, vel_slug, patch_slug
+    global x_slug, y_slug, end_slug, walk_count_slug, vel_slug, width_slug, height_slug, patch_slug
+
     walk_left = [
     pygame.image.load("arquivos/monsters/slug/slug-left-1.png"),
     pygame.image.load("arquivos/monsters/slug/slug-left-2.png"),
@@ -209,8 +212,13 @@ def move_char():
         else:
             is_jump = False
             jump_count = max_jump
-def hit():
-    print('hit')
+cont = 1
+def colision():
+    global x, y, hitbox_slug, x_slug, y_slug, cont
+    if x_slug < hitbox[1] + hitbox[3] and y_slug > hitbox[1]:
+        if x_slug > hitbox[0] and x_slug < hitbox[0] + hitbox[2]:
+            cont += 1
+            print("hit: ", cont)
 
 #Tela de Inicio
 while not start_game:
@@ -235,7 +243,6 @@ while not start_game:
 def draw():
     draw_char()
     draw_enemy_slug()
-    draw_enemy_slug()
     pygame.display.update()
 
 #Define o loop principal
@@ -248,6 +255,8 @@ while run:
     draw()
     #chama a funcao de mover o personagem
     move_char()
+    #chama a colisão
+    colision()
     #função: fechar o game
     close_game()
 #encerra o Pygame
