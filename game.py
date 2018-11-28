@@ -198,7 +198,7 @@ def move_char():
             right = False
             left = False
             walk_count = 0
-            pygame.mixer.music.load("arquivos/song/jump.mp3")
+            pygame.mixer.music.load("arquivos/song/jump.wav")
             pygame.mixer.music.play()
     else:
         #define a velocidade e altura do pulo
