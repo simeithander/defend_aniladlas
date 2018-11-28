@@ -6,10 +6,14 @@ IFRN - TADS 2018.2 - www.ifrn.edu.br
 import pygame, os, sys
 pygame.mixer.init()
 pygame.init()
+#define o mixer
 pygame.mixer.pre_init(44100, 16, 2, 5000)
-sound1 = pygame.mixer.Sound("arquivos/song/game_play.ogg")
-channel1 = sound1.play(-1)
-channel1.queue(sound1)
+#define a musica de fundo
+bg_music = pygame.mixer.Sound("arquivos/song/game_play.ogg")
+#define que a musica irá se repetir
+bg_music_play = bg_music .play(-1)
+#da play da musica
+bg_music_play.queue(bg_music)
 #obtem o clock do Pygame
 clock = pygame.time.Clock()
 #Define o tamanho da tela do jogo
