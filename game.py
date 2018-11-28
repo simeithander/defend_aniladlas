@@ -57,7 +57,7 @@ width_slug = 64
 height_slug = 42
 end_slug = 0
 walk_count_slug = 0
-vel_slug = 2
+vel_slug = 1
 patch_slug = [end_slug, x_slug]
 hitbox_slug = (x_slug+5, y_slug+4, 50, height_slug-1)
 
@@ -156,13 +156,13 @@ def draw_enemy_slug():
             walk_count_slug = 0
 
     #desenha o inimigo
-    if walk_count_slug + 1 >= 8:
+    if walk_count_slug + 1 >= 32:
         walk_count_slug = 0
     if vel_slug > 0:
-        win.blit(walk_right[walk_count_slug // 3],(x_slug, y_slug))
+        win.blit(walk_right[walk_count_slug // 8],(x_slug, y_slug))
         walk_count_slug += 1
     else:
-        win.blit(walk_left[walk_count_slug // 3],(x_slug, y_slug))
+        win.blit(walk_left[walk_count_slug // 8],(x_slug, y_slug))
         walk_count_slug += 1
     hitbox_slug = (x_slug+5, y_slug+4, 50, height_slug-1)
     pygame.draw.rect(win, (255,0,0), hitbox_slug, 2)
