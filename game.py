@@ -3,10 +3,17 @@ Game Defend Aniladlas
 Alunos: Simei Thander e Rafael Crisostomos
 IFRN - TADS 2018.2 - www.ifrn.edu.br
 '''
-#importa o pygame
-import pygame
-#inicia o Pygame
+import pygame, os, sys
+pygame.mixer.init()
 pygame.init()
+#define o mixer
+pygame.mixer.pre_init(44100, 16, 2, 5000)
+#define a musica de fundo
+bg_music = pygame.mixer.Sound("arquivos/song/game_play.ogg")
+#define que a musica irá se repetir
+bg_music_play = bg_music .play(-1)
+#da play da musica
+bg_music_play.queue(bg_music)
 #obtem o clock do Pygame
 clock = pygame.time.Clock()
 #Define o tamanho da tela do jogo
@@ -186,6 +193,8 @@ def move_char():
             right = False
             left = False
             walk_count = 0
+            pygame.mixer.music.load("arquivos/song/jump.mp3")
+            pygame.mixer.music.play()
     else:
         #define a velocidade e altura do pulo
         if jump_count >= -max_jump:
@@ -200,7 +209,7 @@ def move_char():
             jump_count = max_jump
 def hit():
     print('hit')
-    
+
 #Tela de Inicio
 while not start_game:
     #Chama o background do jogo
@@ -217,13 +226,15 @@ while not start_game:
     keys = pygame.key.get_pressed()
     if keys[pygame.K_RETURN]:
         start_game = True
+        pygame.mixer.music.load("arquivos/song/star.mp3")
+        pygame.mixer.music.play()
     close_game()
 
 def draw():
     draw_char()
     draw_enemy_slug()
     pygame.display.update()
-    
+
 #Define o loop principal
 while run:
     #define os frames per seconds do jogo
