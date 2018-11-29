@@ -30,6 +30,8 @@ run = True
 home_screen = True
 while run:
     main = True
+    score = 0
+    font = pygame.font.SysFont('verdana', 18)
     #Define algumas variáveis para altura, largura, coordenada X e Y, velocidade
     x = 15
     y = 398
@@ -72,16 +74,16 @@ while run:
    
     #colisão
     def colision():
-        global x, y, x_slug, y_slug, main, home_screen
+        global x, y, x_slug, y_slug, main, home_screen, score
         char = pygame.image.load("arquivos/player/player-idle/p_right_idle.png")
         char_rect = char.get_rect().move(x,y)
-        char_rect.width = 64
+        char_rect.width = 45
         slug = pygame.image.load("arquivos/monsters/slug/slug-left-1.png")
         slug_rect = slug.get_rect().move(x_slug,y_slug)
         slug_rect.width = 64
 
-        #pygame.draw.rect(win, (255,0,0), slug_rect, 2)
-        #pygame.draw.rect(win, (255,0,0), char_rect, 2)
+        pygame.draw.rect(win, (255,0,0), slug_rect, 2)
+        pygame.draw.rect(win, (255,0,0), char_rect, 2)
      
         
         for a, b in [(slug_rect, char_rect), (char_rect, slug_rect)]:
@@ -89,8 +91,9 @@ while run:
                 main = False
                 home_screen = True
             if isPointInsideRect(a.left, a.bottom, b):
-                x_slug = 640
-                y_slug = 480
+                x_slug = 880
+                y_slug = 880
+                score += 1
             #if isPointInsideRect(a.right, a.top, b):
                 #main = False
                 #home_screen = True
@@ -237,6 +240,10 @@ while run:
 
     #desenha as animações na tela
     def draw():
+        global score
+        text = font.render('Pontos: ' + str(score), 1, (255,255,255))
+        win.blit(text, (550, 5))
+
         draw_char()
         draw_enemy_slug()
         #chama a colisão
