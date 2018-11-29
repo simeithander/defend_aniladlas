@@ -40,9 +40,9 @@ while run:
     vel = 8
     #Define a condição do pulo
     is_jump = False
-    max_jump = 8
+    max_jump = 9
     #Define a contagem do pulo
-    jump_count = 8
+    jump_count = 9
     #Define para onde está percorrendo o personagem:
     left = False
     right = False
@@ -54,27 +54,50 @@ while run:
     
     #váriaveis globais para o slug
     x_slug = 600
-    y_slug = 410
+    y_slug = 411
     width_slug = 64
     height_slug = 42
     end_slug = 0
     walk_count_slug = 0
     vel_slug = 1
     patch_slug = [end_slug, x_slug]
-    hitbox_slug = (x_slug+5, y_slug+4, 50, height_slug-1)
 
-    #define a colisão
-    cont = 1
+    #detecta colisão
+
+    def isPointInsideRect(x, y, rect):
+        if x > rect.left and x < rect.right and y > rect.top and y < rect.bottom:
+            return True
+        else:
+            return False
+   
+    #colisão
     def colision():
-        global x, y, hitbox_slug, x_slug, y_slug, cont, run, home_screen, main
+        global x, y, x_slug, y_slug, main, home_screen
+        char = pygame.image.load("arquivos/player/player-idle/p_right_idle.png")
+        char_rect = char.get_rect().move(x,y)
+        char_rect.width = 64
+        slug = pygame.image.load("arquivos/monsters/slug/slug-left-1.png")
+        slug_rect = slug.get_rect().move(x_slug,y_slug)
+        slug_rect.width = 64
 
-        if x_slug < hitbox[1] + hitbox[3] and y_slug > hitbox[1]:
-            if x_slug > hitbox[0] and x_slug < hitbox[0] + hitbox[2]:
-                cont += 1
-                print("hit: ", cont)
-                #se houver a colisão lateral, o jogo é reiniciado
-                home_screen = True
+        #pygame.draw.rect(win, (255,0,0), slug_rect, 2)
+        #pygame.draw.rect(win, (255,0,0), char_rect, 2)
+     
+        
+        for a, b in [(slug_rect, char_rect), (char_rect, slug_rect)]:
+            if isPointInsideRect(a.left, a.top, b):
                 main = False
+                home_screen = True
+            if isPointInsideRect(a.left, a.bottom, b):
+                x_slug = 640
+                y_slug = 480
+            #if isPointInsideRect(a.right, a.top, b):
+                #main = False
+                #home_screen = True
+            if isPointInsideRect(a.right, a.right, b):
+                main = False
+                home_screen = True
+                
 
     #Desenha o cenário
     def draw_scenario():
@@ -88,7 +111,7 @@ while run:
             cont += 32
     #desenha o personagem
     def draw_char():
-        global x, y, width, height, walk_count, left, right, press_left, hitbox
+        global x, y, width, height, walk_count, left, right, press_left, hitbox, hitbox_slug
         #obtem as teclas
         keys = pygame.key.get_pressed()
         #carrega os sprites do personagem
@@ -129,9 +152,6 @@ while run:
                 walk_count +=1
                 press = True
         win.blit(char_position, (x,y))
-        #colisão
-        hitbox = (x+11, y, 39, 55)
-        pygame.draw.rect(win, (255,0,0), hitbox, 2)
 
     #Cria o inimigo Slug
     def draw_enemy_slug():
@@ -171,8 +191,6 @@ while run:
         else:
             win.blit(walk_left[walk_count_slug // 8],(x_slug, y_slug))
             walk_count_slug += 1
-        hitbox_slug = (x_slug+5, y_slug+4, 50, height_slug-1)
-        pygame.draw.rect(win, (255,0,0), hitbox_slug, 2)
 
     #Define a movimentação do personagem
     def move_char():
@@ -221,6 +239,8 @@ while run:
     def draw():
         draw_char()
         draw_enemy_slug()
+        #chama a colisão
+        colision()
         pygame.display.update()
 
     #Define o loop principal
@@ -234,12 +254,14 @@ while run:
             draw()
             #chama a funcao de mover o personagem
             move_char()
-            #chama a colisão
-            colision()
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     main = False
                     run = False
+            keys = pygame.key.get_pressed()
+            if keys[pygame.K_ESCAPE]:
+                main = False
+                home_screen = True
         while home_screen:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
