@@ -2,7 +2,6 @@
 Game Defend Aniladlas
 Alunos: Simei Thander e Rafael Crisostomos
 IFRN - TADS 2018.2 - www.ifrn.edu.br
-teste rafael
 '''
 import pygame, os, sys
 pygame.mixer.init()
