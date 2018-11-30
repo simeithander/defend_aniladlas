@@ -27,6 +27,7 @@ clock = pygame.time.Clock()
 #Define que o loop começará verdadeiro
 run = True
 home_screen = True
+dead = False
 while run:
     t = pygame.time.get_ticks()
     main = True
@@ -79,7 +80,7 @@ while run:
    
     #colisão
     def colision():
-        global x, y, x_slug, y_slug, main, home_screen, score, screen_slug
+        global x, y, x_slug, y_slug, main, home_screen, score, screen_slug, dead
 
         char = pygame.image.load("arquivos/player/player-idle/p_right_idle.png")
         char_rect = char.get_rect().move(x,y)
@@ -96,6 +97,7 @@ while run:
                 if isPointInsideRect(a.left, a.top, b):
                     main = False
                     home_screen = True
+                    dead = True
                 if isPointInsideRect(a.left, a.bottom, b):
                     screen_slug = False
                     score += 1
@@ -105,6 +107,7 @@ while run:
                 if isPointInsideRect(a.right, a.right, b):
                     main = False
                     home_screen = True
+                    dead = True
                 
 
     #Desenha o cenário
@@ -290,6 +293,7 @@ while run:
             if keys[pygame.K_ESCAPE]:
                 main = False
                 home_screen = True
+                dead = False
         while home_screen:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -299,8 +303,12 @@ while run:
             #Tela de Inicio
             #Chama o background do jogo
             win.blit(pygame.image.load("arquivos/bg.jpg"),(0,0))
-            #Mostra na tela as informações iniciais
-            win.blit(pygame.image.load("arquivos/infos.png"), (152,130))
+            if dead:
+                #mostra a mensagem de morte
+                win.blit(pygame.image.load("arquivos/dead.png"), (152,130))
+            else:
+                #Mostra na tela as informações iniciais
+                win.blit(pygame.image.load("arquivos/infos.png"), (152,130))
             #desenha a tecla enter
             win.blit(pygame.image.load("arquivos/enter.png"), (192,360))
             #desenha o logo da tela
