@@ -22,13 +22,13 @@ display_height = 480
 win = pygame.display.set_mode((display_width, display_height))
 #Seta o nome do game na barra superior de titulos
 pygame.display.set_caption("Defend Aniladlas")
-
 #obtem o clock do Pygame
 clock = pygame.time.Clock()
 #Define que o loop começará verdadeiro
 run = True
 home_screen = True
 while run:
+    t = pygame.time.get_ticks()
     main = True
     score = 0
     font = pygame.font.SysFont('verdana', 18)
@@ -55,7 +55,7 @@ while run:
     #Condição de inicialização do Game
     
     #váriaveis globais para o slug
-    x_slug = 600
+    x_slug = 640
     y_slug = 411
     width_slug = 64
     height_slug = 42
@@ -63,9 +63,14 @@ while run:
     walk_count_slug = 0
     vel_slug = 1
     patch_slug = [end_slug, x_slug]
+    screen_slug = True
 
+    def score_screen():
+        global score
+        text_point = font.render('Pontos: ' + str(score), 1, (255,255,255))
+        win.blit(text_point, (550, 5))
+    
     #detecta colisão
-
     def isPointInsideRect(x, y, rect):
         if x > rect.left and x < rect.right and y > rect.top and y < rect.bottom:
             return True
@@ -74,32 +79,32 @@ while run:
    
     #colisão
     def colision():
-        global x, y, x_slug, y_slug, main, home_screen, score
+        global x, y, x_slug, y_slug, main, home_screen, score, screen_slug
+
         char = pygame.image.load("arquivos/player/player-idle/p_right_idle.png")
         char_rect = char.get_rect().move(x,y)
         char_rect.width = 45
-        slug = pygame.image.load("arquivos/monsters/slug/slug-left-1.png")
-        slug_rect = slug.get_rect().move(x_slug,y_slug)
-        slug_rect.width = 64
 
-        pygame.draw.rect(win, (255,0,0), slug_rect, 2)
-        pygame.draw.rect(win, (255,0,0), char_rect, 2)
+        if screen_slug:
+            slug = pygame.image.load("arquivos/monsters/slug/slug-left-1.png")
+            slug_rect = slug.get_rect().move(x_slug,y_slug)
+            slug_rect.width = 64
+            pygame.draw.rect(win, (255,0,0), slug_rect, 2)
+            pygame.draw.rect(win, (255,0,0), char_rect, 2)
      
-        
-        for a, b in [(slug_rect, char_rect), (char_rect, slug_rect)]:
-            if isPointInsideRect(a.left, a.top, b):
-                main = False
-                home_screen = True
-            if isPointInsideRect(a.left, a.bottom, b):
-                x_slug = 880
-                y_slug = 880
-                score += 1
-            #if isPointInsideRect(a.right, a.top, b):
-                #main = False
-                #home_screen = True
-            if isPointInsideRect(a.right, a.right, b):
-                main = False
-                home_screen = True
+            for a, b in [(slug_rect, char_rect), (char_rect, slug_rect)]:
+                if isPointInsideRect(a.left, a.top, b):
+                    main = False
+                    home_screen = True
+                if isPointInsideRect(a.left, a.bottom, b):
+                    screen_slug = False
+                    score += 1
+                #if isPointInsideRect(a.right, a.top, b):
+                    #main = False
+                    #home_screen = True
+                if isPointInsideRect(a.right, a.right, b):
+                    main = False
+                    home_screen = True
                 
 
     #Desenha o cenário
@@ -158,7 +163,7 @@ while run:
 
     #Cria o inimigo Slug
     def draw_enemy_slug():
-        global x_slug, y_slug, end_slug, walk_count_slug, vel_slug, width_slug, height_slug, patch_slug
+        global x_slug, y_slug, end_slug, walk_count_slug, vel_slug, width_slug, height_slug, patch_slug, screen_slug
 
         walk_left = [
         pygame.image.load("arquivos/monsters/slug/slug-left-1.png"),
@@ -186,14 +191,15 @@ while run:
                 walk_count_slug = 0
 
         #desenha o inimigo
-        if walk_count_slug + 1 >= 32:
-            walk_count_slug = 0
-        if vel_slug > 0:
-            win.blit(walk_right[walk_count_slug // 8],(x_slug, y_slug))
-            walk_count_slug += 1
-        else:
-            win.blit(walk_left[walk_count_slug // 8],(x_slug, y_slug))
-            walk_count_slug += 1
+        if screen_slug:
+            if walk_count_slug + 1 >= 32:
+                walk_count_slug = 0
+            if vel_slug > 0:
+                win.blit(walk_right[walk_count_slug // 8],(x_slug, y_slug))
+                walk_count_slug += 1
+            else:
+                win.blit(walk_left[walk_count_slug // 8],(x_slug, y_slug))
+                walk_count_slug += 1
 
     #Define a movimentação do personagem
     def move_char():
@@ -237,13 +243,28 @@ while run:
             else:
                 is_jump = False
                 jump_count = max_jump
+    def time_game():
+        global sec, x_slug, vel_slug, screen_slug, score
+        sec = (pygame.time.get_ticks() - t) // 1000
+        print(score)
+        if not screen_slug and score == 1:
+            x_slug = 640
+            vel_slug = 2
+            screen_slug = True
+        elif not screen_slug and score == 2:
+            x_slug = 640
+            vel_slug = 6
+            screen_slug = True
+
+        time = font.render("Time: " + str(sec) + "s", True, (255,255,255))
+        win.blit(time, (550, 25))
 
     #desenha as animações na tela
     def draw():
-        global score
-        text = font.render('Pontos: ' + str(score), 1, (255,255,255))
-        win.blit(text, (550, 5))
-
+        #placar e tempo
+        score_screen()
+        time_game()       
+        #Desenha dos objetos na tela
         draw_char()
         draw_enemy_slug()
         #chama a colisão
