@@ -28,6 +28,7 @@ clock = pygame.time.Clock()
 run = True
 home_screen = True
 dead = False
+slow = False
 while run:
     t = pygame.time.get_ticks()
     main = True
@@ -247,7 +248,7 @@ while run:
                 is_jump = False
                 jump_count = max_jump
     def time_game():
-        global sec, x_slug, vel_slug, screen_slug, score
+        global sec, x_slug, vel_slug, screen_slug, score, main, home_screen, slow
         sec = (pygame.time.get_ticks() - t) // 1000
         print(score)
         if not screen_slug and score == 1:
@@ -258,6 +259,10 @@ while run:
             x_slug = 640
             vel_slug = 6
             screen_slug = True
+        if sec == 20:
+            main = False
+            home_screen = True
+            slow = True
 
         time = font.render("Time: " + str(sec) + "s", True, (255,255,255))
         win.blit(time, (550, 25))
@@ -306,7 +311,10 @@ while run:
             if dead:
                 #mostra a mensagem de morte
                 win.blit(pygame.image.load("arquivos/dead.png"), (152,130))
-            else:
+            elif slow:
+                #Mostra a tela de tempo acabado
+                win.blit(pygame.image.load("arquivos/lento.png"), (152,130))
+            else:            
                 #Mostra na tela as informações iniciais
                 win.blit(pygame.image.load("arquivos/infos.png"), (152,130))
             #desenha a tecla enter
