@@ -312,6 +312,7 @@ while run:
     def time_game():
         global sec, x_slug, vel_slug, screen_slug, score, main, home_screen, slow
         sec = (pygame.time.get_ticks() - t) // 1000
+        
         if not screen_slug and score == 1:
             x_slug = 640
             vel_slug = 2
@@ -372,7 +373,7 @@ while run:
             if dead:
                 #mostra a mensagem de morte
                 win.blit(pygame.image.load("arquivos/dead.png"), (152,130))
-            elif slow:
+            if slow:
                 #Mostra a tela de tempo acabado
                 win.blit(pygame.image.load("arquivos/lento.png"), (152,130))
             else:            
