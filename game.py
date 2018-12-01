@@ -40,9 +40,10 @@ while run:
     width = 64
     height = 55
     hitbox = (x+11, y, 39, 55)
+    #contador dos sprites para o char em IDLE
     cont_idle = 0
     #Velocidade
-    vel = 8
+    vel = 10
     #Define a condição do pulo
     is_jump = False
     max_jump = 9
@@ -67,6 +68,10 @@ while run:
     vel_slug = 1
     patch_slug = [end_slug, x_slug]
     screen_slug = True
+
+    #Contagem de sprites do BOSS
+    boss_cont_anim = 0
+    screen_boss = False
 
     def score_screen():
         global score
@@ -123,12 +128,14 @@ while run:
         for i in range(0,31):
             win.blit(bloco,(cont,453))
             cont += 32
+
     #desenha o personagem
     def draw_char():
         global x, y, width, height, walk_count, left, right, press_left, jump_count, cont_idle, sec
         #obtem as teclas
         keys = pygame.key.get_pressed()
         #carrega os sprites do personagem
+
         walk_right = [
         pygame.image.load("arquivos/player/player-skip/p_left_1.png"),
         pygame.image.load("arquivos/player/player-skip/p_left_2.png"),
@@ -264,6 +271,23 @@ while run:
                 win.blit(walk_left[walk_count_slug // 8],(x_slug, y_slug))
                 walk_count_slug += 1
 
+    def draw_boss():
+        global boss_cont_anim
+        sprite = boss_cont_anim//2
+        boss = []
+        #adiciona os sprites a lista
+        for i in range(0, 12):
+            boss.append(pygame.image.load("arquivos/monsters/boss/aniladlas_"+str(i)+".png"))
+        
+        #mostra o boss na tela
+        if screen_boss:
+            win.blit(boss[sprite], (500,100))
+
+        #tempo dos sprites do boss
+        boss_cont_anim += 1
+        if boss_cont_anim == 24:
+            boss_cont_anim = 0
+
     #Define a movimentação do personagem
     def move_char():
         global x, y, width, height, win, is_jump, jump_count, max_jump, left, right, press_left
@@ -310,7 +334,7 @@ while run:
                 jump_count = max_jump
 
     def time_game():
-        global sec, x_slug, vel_slug, screen_slug, score, main, home_screen, slow
+        global sec, x_slug, vel_slug, screen_slug, score, main, home_screen, slow, screen_boss
         sec = (pygame.time.get_ticks() - t) // 1000
         
         if not screen_slug and score == 1:
@@ -321,7 +345,9 @@ while run:
             x_slug = 640
             vel_slug = 6
             screen_slug = True
-        if sec == 20:
+        elif not screen_slug and score == 3:
+            screen_boss = True
+        if sec == 60:
             main = False
             home_screen = True
             slow = True
@@ -339,6 +365,7 @@ while run:
         draw_enemy_slug()
         #chama a colisão
         colision()
+        draw_boss()
         pygame.display.update()
 
     #Define o loop principal
@@ -389,7 +416,7 @@ while run:
             keys = pygame.key.get_pressed()
             if keys[pygame.K_RETURN]:
                 home_screen = False
-                pygame.mixer.music.load("arquivos/song/star.mp3")
+                pygame.mixer.music.load("arquivos/song/enter.mp3")
                 pygame.mixer.music.play()
         
 #encerra o Pygame
