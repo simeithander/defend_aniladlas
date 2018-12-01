@@ -40,6 +40,7 @@ while run:
     width = 64
     height = 55
     hitbox = (x+11, y, 39, 55)
+    cont_idle = 0
     #Velocidade
     vel = 8
     #Define a condição do pulo
@@ -85,14 +86,14 @@ while run:
 
         char = pygame.image.load("arquivos/player/player-idle/p_right_idle.png")
         char_rect = char.get_rect().move(x,y)
-        char_rect.width = 45
+        char_rect.width = 64
 
         if screen_slug:
             slug = pygame.image.load("arquivos/monsters/slug/slug-left-1.png")
             slug_rect = slug.get_rect().move(x_slug,y_slug)
-            slug_rect.width = 64
+            slug_rect.width = 45
             pygame.draw.rect(win, (255,0,0), slug_rect, 2)
-            pygame.draw.rect(win, (255,0,0), char_rect, 2)
+            #pygame.draw.rect(win, (255,0,0), char_rect, 2)
      
             for a, b in [(slug_rect, char_rect), (char_rect, slug_rect)]:
                 if isPointInsideRect(a.left, a.top, b):
@@ -102,15 +103,16 @@ while run:
                 if isPointInsideRect(a.left, a.bottom, b):
                     screen_slug = False
                     score += 1
-                #if isPointInsideRect(a.right, a.top, b):
-                    #main = False
-                    #home_screen = True
+                '''    
+                if isPointInsideRect(a.right, a.top, b):
+                    main = False
+                    home_screen = True
+                '''
                 if isPointInsideRect(a.right, a.right, b):
                     main = False
                     home_screen = True
                     dead = True
-                
-
+            
     #Desenha o cenário
     def draw_scenario():
         win.blit(pygame.image.load("arquivos/bg.jpg"),(0,0))
@@ -123,7 +125,7 @@ while run:
             cont += 32
     #desenha o personagem
     def draw_char():
-        global x, y, width, height, walk_count, left, right, press_left, hitbox, hitbox_slug
+        global x, y, width, height, walk_count, left, right, press_left, jump_count, cont_idle, sec
         #obtem as teclas
         keys = pygame.key.get_pressed()
         #carrega os sprites do personagem
@@ -145,26 +147,83 @@ while run:
         pygame.image.load("arquivos/player/player-skip/p_right_6.png"),
         pygame.image.load("arquivos/player/player-skip/p_right_7.png"),
         pygame.image.load("arquivos/player/player-skip/p_right_8.png")]
+        #sprites de pulo
+
+        jump_left = [
+        pygame.image.load("arquivos/player/player-jump/player-jump-left-1.png"),
+        pygame.image.load("arquivos/player/player-jump/player-jump-left-2.png"),
+        pygame.image.load("arquivos/player/player-jump/player-jump-left-3.png"),
+        pygame.image.load("arquivos/player/player-jump/player-jump-left-4.png")]
+        jump_right = [
+        pygame.image.load("arquivos/player/player-jump/player-jump-right-1.png"),
+        pygame.image.load("arquivos/player/player-jump/player-jump-right-2.png"),
+        pygame.image.load("arquivos/player/player-jump/player-jump-right-3.png"),
+        pygame.image.load("arquivos/player/player-jump/player-jump-right-4.png")]
+
         #sprite Idle (parado)
-        char_right_idle = pygame.image.load("arquivos/player/player-idle/p_right_idle.png")
-        char_left_idle = pygame.image.load("arquivos/player/player-idle/p_left_idle.png")
+        char_right_idle = [
+        pygame.image.load("arquivos/player/player-idle/player-idle-1.png"),
+        pygame.image.load("arquivos/player/player-idle/player-idle-2.png"),
+        pygame.image.load("arquivos/player/player-idle/player-idle-3.png"),
+        pygame.image.load("arquivos/player/player-idle/player-idle-4.png"),
+        pygame.image.load("arquivos/player/player-idle/player-idle-5.png"),
+        pygame.image.load("arquivos/player/player-idle/player-idle-6.png"),
+        pygame.image.load("arquivos/player/player-idle/player-idle-7.png"),
+        pygame.image.load("arquivos/player/player-idle/player-idle-8.png"),
+        pygame.image.load("arquivos/player/player-idle/player-idle-9.png"),]
+
+        char_left_idle = [
+        pygame.image.load("arquivos/player/player-idle/player-idle-left-1.png"),
+        pygame.image.load("arquivos/player/player-idle/player-idle-left-2.png"),
+        pygame.image.load("arquivos/player/player-idle/player-idle-left-3.png"),
+        pygame.image.load("arquivos/player/player-idle/player-idle-left-4.png"),
+        pygame.image.load("arquivos/player/player-idle/player-idle-left-5.png"),
+        pygame.image.load("arquivos/player/player-idle/player-idle-left-6.png"),
+        pygame.image.load("arquivos/player/player-idle/player-idle-left-7.png"),
+        pygame.image.load("arquivos/player/player-idle/player-idle-left-8.png"),
+        pygame.image.load("arquivos/player/player-idle/player-idle-left-9.png"),]
+    
         #define a animação de movimento do personagem
         if walk_count + 1 >= 16:
             walk_count = 0
         if press_left:
-            char_position = char_left_idle
+            #define a animação parado
+            char_position = char_left_idle[cont_idle//3]
+            cont_idle += 1
+
+            if cont_idle == 18:
+                cont_idle = 0
+
             if left:
                 char_position = walk_left[walk_count//3]
                 walk_count +=1
                 press = True
         else:
-            char_position = char_right_idle
+            #define a animação parado
+            char_position = char_right_idle[cont_idle//3]
+            cont_idle += 1
+
+            if cont_idle == 18:
+                cont_idle = 0
+
             if right:
                 char_position = walk_right[walk_count//3]
                 walk_count +=1
                 press = True
-        win.blit(char_position, (x,y))
 
+        #define a animação do pulo
+        if is_jump:
+            if press_left:
+                char_position = jump_left[jump_count//3]
+                if left:
+                    char_position = jump_left[jump_count//3]
+            else:
+                char_position = jump_right[jump_count//3]
+                if right:
+                    char_position = jump_right[jump_count//3] 
+               
+        win.blit(char_position, (x,y))
+        
     #Cria o inimigo Slug
     def draw_enemy_slug():
         global x_slug, y_slug, end_slug, walk_count_slug, vel_slug, width_slug, height_slug, patch_slug, screen_slug
@@ -207,7 +266,8 @@ while run:
 
     #Define a movimentação do personagem
     def move_char():
-        global x, y, width, height, win, is_jump, jump_count, max_jump, left, right,press_left
+        global x, y, width, height, win, is_jump, jump_count, max_jump, left, right, press_left
+       
         #Armazena na variável key a tecla pressionada
         keys = pygame.key.get_pressed()
         #Altera as variáveis de acordo com a tecla pressionada
@@ -226,6 +286,7 @@ while run:
             right = False
             left = False
             walk_count = 0
+
         #Se for pressionado a tecla de pulo, será realizado a condição abaixo:
         if not(is_jump):
             if keys[pygame.K_SPACE]:
@@ -247,10 +308,10 @@ while run:
             else:
                 is_jump = False
                 jump_count = max_jump
+
     def time_game():
         global sec, x_slug, vel_slug, screen_slug, score, main, home_screen, slow
         sec = (pygame.time.get_ticks() - t) // 1000
-        print(score)
         if not screen_slug and score == 1:
             x_slug = 640
             vel_slug = 2
