@@ -58,9 +58,7 @@ while run:
     #contagem de passos
     walk_count = 0
     #estado do botão left:
-    press_left = False
-    #Condição de inicialização do Game
-    
+    press_left = False    
     #váriaveis globais para o slug
     x_slug = 640
     y_slug = 411
@@ -78,6 +76,7 @@ while run:
     screen_boss = False
     x_boss = 500
     y_boss = 200
+    risada = 0
 
     #pontuação
     def score_screen():
@@ -274,15 +273,25 @@ while run:
     
     #move o BOSS aleatoriamente
     def move_boss():
-        global screen_boss, boss_cont, x_boss, y_boss, main, home_screen, dead
+        global screen_boss, boss_cont, x_boss, y_boss, main, home_screen, dead, risada
         #Caso o BOSS entre na tela, será incrimentado um contador e utilizado a divisão por inteiro para 24
         if screen_boss:
             if (boss_cont//24) % 2 == 0:
+                
+                if risada == 3:
+                    pygame.mixer.music.load("arquivos/song/risada_bruxa.mp3")
+                    pygame.mixer.music.play()
+                elif risada == 72:
+                    pygame.mixer.music.load("arquivos/song/risada_bruxa.mp3")
+                    pygame.mixer.music.play()
+                risada += 1
+                print(risada)
                 screen_boss = True
             elif (boss_cont//24) == 1:
                 screen_boss = False
                 x_boss = 550
                 y_boss = 300
+                
             elif (boss_cont//24) == 3:
                 screen_boss = False
                 x_boss = 480
@@ -294,7 +303,6 @@ while run:
             elif (boss_cont//24) == 7:
                 screen_boss = False
                 x_boss = 500
-                y_boss = 355
             elif (boss_cont//24) == 9 and x_boss < 640 and y_boss < 480:
                 screen_boss = False
                 x_boss = 100
