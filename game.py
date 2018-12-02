@@ -23,7 +23,6 @@ home_screen = True
 dead = False
 slow = False
 you_win = False
-'''
 #define o mixer
 pygame.mixer.pre_init(44100, 16, 2, 5000)
 #define a musica de fundo
@@ -31,7 +30,7 @@ bg_music = pygame.mixer.Sound("arquivos/song/game_play.ogg")
 #define que a musica irá se repetir
 bg_music_play = bg_music.play(-1)
 #da play da music
-bg_music_play.queue(bg_music)'''
+bg_music_play.queue(bg_music)
 
 #Define que o loop começará verdadeiro
 while run:
@@ -88,7 +87,7 @@ while run:
 
     #colisão
     def collision():
-        global x, y, x_slug, y_slug, main, home_screen, score, screen_slug, dead, x_boss, y_boss, screen_boss, you_win
+        global main, home_screen, screen_slug, dead, you_win, score, x_boss, y_boss
 
         #Rect do heroi
         char = pygame.image.load("arquivos/player/player-idle/p_right_idle.png")
@@ -98,7 +97,6 @@ while run:
         if screen_boss:
             #Rect do BOSS
             boss = pygame.image.load("arquivos/monsters/boss/aniladlas_0.png")
-            boss_rect = boss.get_rect().move(x_boss,y_boss)
             #matar o boss
             if char_rect.collidepoint(x_boss+30, y_boss) == 1:
                 print("morreu o BOSS")
@@ -123,8 +121,6 @@ while run:
             slug = pygame.image.load("arquivos/monsters/slug/slug-left-1.png")
             slug_rect = slug.get_rect().move(x_slug,y_slug)
             slug_rect.width = 64
-            pygame.draw.rect(win, (255,0,0), slug_rect, 2)
-
             #matar o slug
             if char_rect.collidepoint(x_slug+34, y_slug) == 1:
                 print("morreu o slug")
@@ -158,7 +154,7 @@ while run:
 
     #desenha o personagem
     def draw_char():
-        global x, y, width, height, walk_count, left, right, press_left, jump_count, cont_idle, sec
+        global walk_count, cont_idle
         
         walk_right = []
         walk_left = []
@@ -225,7 +221,7 @@ while run:
         
     #Cria o inimigo Slug
     def draw_enemy_slug():
-        global x_slug, y_slug, end_slug, walk_count_slug, vel_slug, width_slug, height_slug, patch_slug, screen_slug
+        global x_slug, walk_count_slug, vel_slug
 
         walk_left = []
         walk_right = []
@@ -261,7 +257,7 @@ while run:
 
     #desenha o BOSS
     def draw_boss():
-        global boss_cont_anim, x_boss, y_boss
+        global boss_cont_anim
         sprite = boss_cont_anim//2
         boss = []
         #adiciona os sprites a lista
@@ -313,7 +309,7 @@ while run:
 
     #Define a movimentação do personagem
     def move_char():
-        global x, y, width, height, win, is_jump, jump_count, max_jump, left, right, press_left
+        global x, y, is_jump, jump_count, left, right, press_left, walk_count
        
         #Armazena na variável key a tecla pressionada
         keys = pygame.key.get_pressed()
@@ -357,7 +353,7 @@ while run:
                 jump_count = max_jump
 
     def time_game():
-        global sec, x_slug, vel_slug, screen_slug, score, main, home_screen, slow, screen_boss
+        global x_slug, vel_slug, screen_slug, main, home_screen, slow, screen_boss
         sec = (pygame.time.get_ticks() - t) // 1000
         if not screen_slug and score == 1:
             x_slug = 640
@@ -379,7 +375,6 @@ while run:
 
     #desenha as animações na tela
     def draw():
-        global boss_cont, screen_boss, y_boss, x_boss
         #placar e tempo
         score_screen()
         time_game()       
