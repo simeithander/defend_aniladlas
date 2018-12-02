@@ -65,59 +65,79 @@ while run:
     height_slug = 42
     end_slug = 0
     walk_count_slug = 0
-    vel_slug = 1
+    vel_slug = 2
     patch_slug = [end_slug, x_slug]
     screen_slug = True
 
     #Contagem de sprites do BOSS
     boss_cont_anim = 0
+    boss_cont = 0
     screen_boss = False
+    x_boss = 500
+    y_boss = 200
 
     def score_screen():
         global score
-        text_point = font.render('Pontos: ' + str(score), 1, (255,255,255))
+        text_point = font.render('Score: ' + str(score), 1, (255,255,255))
         win.blit(text_point, (550, 5))
     
-    #detecta colisão
-    def isPointInsideRect(x, y, rect):
-        if x > rect.left and x < rect.right and y > rect.top and y < rect.bottom:
-            return True
-        else:
-            return False
-   
-    #colisão
-    def colision():
-        global x, y, x_slug, y_slug, main, home_screen, score, screen_slug, dead
 
+    #colisão
+    def collision():
+        global x, y, x_slug, y_slug, main, home_screen, score, screen_slug, dead, x_boss, y_boss, screen_boss
+
+        #Rect do heroi
         char = pygame.image.load("arquivos/player/player-idle/p_right_idle.png")
         char_rect = char.get_rect().move(x,y)
         char_rect.width = 64
+        pygame.draw.rect(win, (255,0,0), char_rect, 2)
+
+        if screen_boss:
+            #Rect do BOSS
+            boss = pygame.image.load("arquivos/monsters/boss/aniladlas_0.png")
+            boss_rect = boss.get_rect().move(x_boss,y_boss)
+            #matar o boss
+            if char_rect.collidepoint(x_boss+30, y_boss) == 1:
+                print("morreu o BOSS")
+                x_boss = 640
+                y_boss = 480
+            elif char_rect.collidepoint(x_boss, y_boss+90) == 1:
+                print("morreu pela esquerda")
+                '''main = False
+                home_screen = True
+                dead = True'''
+            elif char_rect.collidepoint(x_boss+60, y_boss+55) == 1:
+                print("morreu pela direita")
+                '''main = False
+                home_screen = True
+                dead = True'''
+            
+            
+            pygame.draw.rect(win, (255,0,0), boss_rect, 2)
 
         if screen_slug:
+            #Rect do Slug
             slug = pygame.image.load("arquivos/monsters/slug/slug-left-1.png")
             slug_rect = slug.get_rect().move(x_slug,y_slug)
-            slug_rect.width = 45
+            slug_rect.width = 64
             pygame.draw.rect(win, (255,0,0), slug_rect, 2)
-            #pygame.draw.rect(win, (255,0,0), char_rect, 2)
-     
-            for a, b in [(slug_rect, char_rect), (char_rect, slug_rect)]:
-                if isPointInsideRect(a.left, a.top, b):
-                    main = False
-                    home_screen = True
-                    dead = True
-                if isPointInsideRect(a.left, a.bottom, b):
-                    screen_slug = False
-                    score += 1
-                '''    
-                if isPointInsideRect(a.right, a.top, b):
-                    main = False
-                    home_screen = True
-                '''
-                if isPointInsideRect(a.right, a.right, b):
-                    main = False
-                    home_screen = True
-                    dead = True
-            
+
+            #matar o slug
+            if char_rect.collidepoint(x_slug+34, y_slug) == 1:
+                print("morreu o slug")
+                screen_slug = False
+                score += 1
+            elif char_rect.collidepoint(x_slug, y_slug+5) == 1:
+                print("morreu pela esquerda")
+                main = False
+                home_screen = True
+                dead = True
+            elif char_rect.collidepoint(x_slug+64, y_slug+40) == 1:
+                print("morreu pela direita")
+                main = False
+                home_screen = True
+                dead = True
+        
     #Desenha o cenário
     def draw_scenario():
         win.blit(pygame.image.load("arquivos/bg.jpg"),(0,0))
@@ -271,8 +291,9 @@ while run:
                 win.blit(walk_left[walk_count_slug // 8],(x_slug, y_slug))
                 walk_count_slug += 1
 
+    #desenha o BOSS
     def draw_boss():
-        global boss_cont_anim
+        global boss_cont_anim, x_boss, y_boss
         sprite = boss_cont_anim//2
         boss = []
         #adiciona os sprites a lista
@@ -281,12 +302,44 @@ while run:
         
         #mostra o boss na tela
         if screen_boss:
-            win.blit(boss[sprite], (500,100))
+            win.blit(boss[sprite], (x_boss,y_boss))
 
         #tempo dos sprites do boss
         boss_cont_anim += 1
         if boss_cont_anim == 24:
             boss_cont_anim = 0
+    
+    def move_boss():
+        global screen_boss, boss_cont, x_boss, y_boss, main, home_screen, dead
+        if screen_boss:
+            if (boss_cont//24) % 2 == 0:
+                screen_boss = True
+            elif (boss_cont//24) == 1:
+                screen_boss = False
+                x_boss = 550
+                y_boss = 300
+            elif (boss_cont//24) == 3:
+                screen_boss = False
+                x_boss = 480
+                y_boss = 250
+            elif (boss_cont//24) == 5:
+                screen_boss = False
+                x_boss = 350
+                y_boss = 150   
+            elif (boss_cont//24) == 7:
+                screen_boss = False
+                x_boss = 500
+                y_boss = 355
+            elif (boss_cont//24) == 9 and x_boss < 640 and y_boss < 480:
+                screen_boss = False
+                x_boss = 100
+                y_boss = 355
+            elif (boss_cont//24) == 11 and x_boss < 640 and y_boss < 480:
+                main = False
+                home_screen = True
+                dead = True  
+            #contagem das aparições do BOSS    
+            boss_cont +=1   
 
     #Define a movimentação do personagem
     def move_char():
@@ -357,14 +410,13 @@ while run:
 
     #desenha as animações na tela
     def draw():
+        global boss_cont, screen_boss, y_boss, x_boss
         #placar e tempo
         score_screen()
         time_game()       
         #Desenha dos objetos na tela
         draw_char()
         draw_enemy_slug()
-        #chama a colisão
-        colision()
         draw_boss()
         pygame.display.update()
 
@@ -375,10 +427,14 @@ while run:
             clock.tick(60)
             #desenha o cenario:
             draw_scenario()
+            #chama a colisão
+            collision()
             #chama a função que desenha os objetos animados
             draw()
             #chama a funcao de mover o personagem
             move_char()
+            #chama a função mover boss
+            move_boss()
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     main = False
@@ -400,7 +456,7 @@ while run:
             if dead:
                 #mostra a mensagem de morte
                 win.blit(pygame.image.load("arquivos/dead.png"), (152,130))
-            if slow:
+            elif slow:
                 #Mostra a tela de tempo acabado
                 win.blit(pygame.image.load("arquivos/lento.png"), (152,130))
             else:            
