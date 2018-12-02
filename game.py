@@ -254,7 +254,6 @@ while run:
             else:
                 win.blit(walk_left[walk_count_slug // 8],(x_slug, y_slug))
                 walk_count_slug += 1
-
     #desenha o BOSS
     def draw_boss():
         global boss_cont_anim
@@ -357,7 +356,7 @@ while run:
         sec = (pygame.time.get_ticks() - t) // 1000
         if not screen_slug and score == 1:
             x_slug = 640
-            vel_slug = 2
+            vel_slug = 4
             screen_slug = True
         elif not screen_slug and score == 2:
             x_slug = 640
