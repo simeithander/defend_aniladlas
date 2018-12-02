@@ -6,15 +6,7 @@ IFRN - TADS 2018.2 - www.ifrn.edu.br
 import pygame, os, sys
 pygame.mixer.init()
 pygame.init()
-'''
-#define o mixer
-pygame.mixer.pre_init(44100, 16, 2, 5000)
-#define a musica de fundo
-bg_music = pygame.mixer.Sound("arquivos/song/game_play.ogg")
-#define que a musica irá se repetir
-bg_music_play = bg_music .play(-1)
-#da play da musica
-bg_music_play.queue(bg_music)'''
+
 #Define o tamanho da tela do jogo
 display_width = 640
 display_height = 480
@@ -24,11 +16,24 @@ win = pygame.display.set_mode((display_width, display_height))
 pygame.display.set_caption("Defend Aniladlas")
 #obtem o clock do Pygame
 clock = pygame.time.Clock()
-#Define que o loop começará verdadeiro
+
+#variaveis para a tela home
 run = True
 home_screen = True
 dead = False
 slow = False
+you_win = False
+'''
+#define o mixer
+pygame.mixer.pre_init(44100, 16, 2, 5000)
+#define a musica de fundo
+bg_music = pygame.mixer.Sound("arquivos/song/game_play.ogg")
+#define que a musica irá se repetir
+bg_music_play = bg_music.play(-1)
+#da play da music
+bg_music_play.queue(bg_music)'''
+
+#Define que o loop começará verdadeiro
 while run:
     t = pygame.time.get_ticks()
     main = True
@@ -39,7 +44,6 @@ while run:
     y = 398
     width = 64
     height = 55
-    hitbox = (x+11, y, 39, 55)
     #contador dos sprites para o char em IDLE
     cont_idle = 0
     #Velocidade
@@ -76,21 +80,20 @@ while run:
     x_boss = 500
     y_boss = 200
 
+    #pontuação
     def score_screen():
         global score
         text_point = font.render('Score: ' + str(score), 1, (255,255,255))
         win.blit(text_point, (550, 5))
-    
 
     #colisão
     def collision():
-        global x, y, x_slug, y_slug, main, home_screen, score, screen_slug, dead, x_boss, y_boss, screen_boss
+        global x, y, x_slug, y_slug, main, home_screen, score, screen_slug, dead, x_boss, y_boss, screen_boss, you_win
 
         #Rect do heroi
         char = pygame.image.load("arquivos/player/player-idle/p_right_idle.png")
         char_rect = char.get_rect().move(x,y)
         char_rect.width = 64
-        pygame.draw.rect(win, (255,0,0), char_rect, 2)
 
         if screen_boss:
             #Rect do BOSS
@@ -101,20 +104,20 @@ while run:
                 print("morreu o BOSS")
                 x_boss = 640
                 y_boss = 480
+                main = False
+                home_screen = True
+                you_win = True
             elif char_rect.collidepoint(x_boss, y_boss+90) == 1:
                 print("morreu pela esquerda")
-                '''main = False
+                main = False
                 home_screen = True
-                dead = True'''
+                dead = True
             elif char_rect.collidepoint(x_boss+60, y_boss+55) == 1:
                 print("morreu pela direita")
-                '''main = False
+                main = False
                 home_screen = True
-                dead = True'''
-            
-            
-            pygame.draw.rect(win, (255,0,0), boss_rect, 2)
-
+                dead = True
+    
         if screen_slug:
             #Rect do Slug
             slug = pygame.image.load("arquivos/monsters/slug/slug-left-1.png")
@@ -140,7 +143,11 @@ while run:
         
     #Desenha o cenário
     def draw_scenario():
-        win.blit(pygame.image.load("arquivos/bg.jpg"),(0,0))
+        if not screen_slug and score >= 3:
+            win.blit(pygame.image.load("arquivos/bg_boss.jpg"),(0,0))
+        else:
+            win.blit(pygame.image.load("arquivos/bg2.jpg"),(0,0))
+
         bloco = pygame.image.load("arquivos/bloco.jpg")
         house = pygame.image.load("arquivos/house.png")
         win.blit(house,(50,211))
@@ -152,63 +159,28 @@ while run:
     #desenha o personagem
     def draw_char():
         global x, y, width, height, walk_count, left, right, press_left, jump_count, cont_idle, sec
-        #obtem as teclas
-        keys = pygame.key.get_pressed()
-        #carrega os sprites do personagem
+        
+        walk_right = []
+        walk_left = []
+        jump_left = []
+        jump_right = []
+        char_right_idle = []
+        char_left_idle = []
 
-        walk_right = [
-        pygame.image.load("arquivos/player/player-skip/p_left_1.png"),
-        pygame.image.load("arquivos/player/player-skip/p_left_2.png"),
-        pygame.image.load("arquivos/player/player-skip/p_left_3.png"),
-        pygame.image.load("arquivos/player/player-skip/p_left_4.png"),
-        pygame.image.load("arquivos/player/player-skip/p_left_5.png"),
-        pygame.image.load("arquivos/player/player-skip/p_left_6.png"),
-        pygame.image.load("arquivos/player/player-skip/p_left_7.png"),
-        pygame.image.load("arquivos/player/player-skip/p_left_8.png")]
-        walk_left = [
-        pygame.image.load("arquivos/player/player-skip/p_right_1.png"),
-        pygame.image.load("arquivos/player/player-skip/p_right_2.png"),
-        pygame.image.load("arquivos/player/player-skip/p_right_3.png"),
-        pygame.image.load("arquivos/player/player-skip/p_right_4.png"),
-        pygame.image.load("arquivos/player/player-skip/p_right_5.png"),
-        pygame.image.load("arquivos/player/player-skip/p_right_6.png"),
-        pygame.image.load("arquivos/player/player-skip/p_right_7.png"),
-        pygame.image.load("arquivos/player/player-skip/p_right_8.png")]
+        #Carrega os sprites de andar para a lista
+        for i in range(0,8):
+            walk_right.append(pygame.image.load("arquivos/player/player-skip/p_left_"+str(i)+".png"))
+            walk_left.append(pygame.image.load("arquivos/player/player-skip/p_right_"+str(i)+".png"))
+
         #sprites de pulo
-
-        jump_left = [
-        pygame.image.load("arquivos/player/player-jump/player-jump-left-1.png"),
-        pygame.image.load("arquivos/player/player-jump/player-jump-left-2.png"),
-        pygame.image.load("arquivos/player/player-jump/player-jump-left-3.png"),
-        pygame.image.load("arquivos/player/player-jump/player-jump-left-4.png")]
-        jump_right = [
-        pygame.image.load("arquivos/player/player-jump/player-jump-right-1.png"),
-        pygame.image.load("arquivos/player/player-jump/player-jump-right-2.png"),
-        pygame.image.load("arquivos/player/player-jump/player-jump-right-3.png"),
-        pygame.image.load("arquivos/player/player-jump/player-jump-right-4.png")]
+        for i in range(0,4):
+            jump_left.append(pygame.image.load("arquivos/player/player-jump/player-jump-left-"+str(i)+".png"))
+            jump_right.append(pygame.image.load("arquivos/player/player-jump/player-jump-right-"+str(i)+".png"))
 
         #sprite Idle (parado)
-        char_right_idle = [
-        pygame.image.load("arquivos/player/player-idle/player-idle-1.png"),
-        pygame.image.load("arquivos/player/player-idle/player-idle-2.png"),
-        pygame.image.load("arquivos/player/player-idle/player-idle-3.png"),
-        pygame.image.load("arquivos/player/player-idle/player-idle-4.png"),
-        pygame.image.load("arquivos/player/player-idle/player-idle-5.png"),
-        pygame.image.load("arquivos/player/player-idle/player-idle-6.png"),
-        pygame.image.load("arquivos/player/player-idle/player-idle-7.png"),
-        pygame.image.load("arquivos/player/player-idle/player-idle-8.png"),
-        pygame.image.load("arquivos/player/player-idle/player-idle-9.png"),]
-
-        char_left_idle = [
-        pygame.image.load("arquivos/player/player-idle/player-idle-left-1.png"),
-        pygame.image.load("arquivos/player/player-idle/player-idle-left-2.png"),
-        pygame.image.load("arquivos/player/player-idle/player-idle-left-3.png"),
-        pygame.image.load("arquivos/player/player-idle/player-idle-left-4.png"),
-        pygame.image.load("arquivos/player/player-idle/player-idle-left-5.png"),
-        pygame.image.load("arquivos/player/player-idle/player-idle-left-6.png"),
-        pygame.image.load("arquivos/player/player-idle/player-idle-left-7.png"),
-        pygame.image.load("arquivos/player/player-idle/player-idle-left-8.png"),
-        pygame.image.load("arquivos/player/player-idle/player-idle-left-9.png"),]
+        for i in range(0,9):
+            char_right_idle.append(pygame.image.load("arquivos/player/player-idle/player-idle-"+str(i)+".png"))
+            char_left_idle.append(pygame.image.load("arquivos/player/player-idle/player-idle-left-"+str(i)+".png"))
     
         #define a animação de movimento do personagem
         if walk_count + 1 >= 16:
@@ -255,17 +227,13 @@ while run:
     def draw_enemy_slug():
         global x_slug, y_slug, end_slug, walk_count_slug, vel_slug, width_slug, height_slug, patch_slug, screen_slug
 
-        walk_left = [
-        pygame.image.load("arquivos/monsters/slug/slug-left-1.png"),
-        pygame.image.load("arquivos/monsters/slug/slug-left-2.png"),
-        pygame.image.load("arquivos/monsters/slug/slug-left-3.png"),
-        pygame.image.load("arquivos/monsters/slug/slug-left-4.png"),]
-        walk_right = [
-        pygame.image.load("arquivos/monsters/slug/slug-right-1.png"),
-        pygame.image.load("arquivos/monsters/slug/slug-right-2.png"),
-        pygame.image.load("arquivos/monsters/slug/slug-right-3.png"),
-        pygame.image.load("arquivos/monsters/slug/slug-right-4.png"),]
+        walk_left = []
+        walk_right = []
 
+        for i in range(0, 4):
+            walk_left.append(pygame.image.load("arquivos/monsters/slug/slug-left-"+str(i)+".png"))
+            walk_right.append(pygame.image.load("arquivos/monsters/slug/slug-right-"+str(i)+".png"))
+        
         #move o inimigo
         if vel_slug > 0:
             if x_slug + vel_slug < patch_slug[1]:
@@ -309,8 +277,10 @@ while run:
         if boss_cont_anim == 24:
             boss_cont_anim = 0
     
+    #move o BOSS aleatoriamente
     def move_boss():
         global screen_boss, boss_cont, x_boss, y_boss, main, home_screen, dead
+        #Caso o BOSS entre na tela, será incrimentado um contador e utilizado a divisão por inteiro para 24
         if screen_boss:
             if (boss_cont//24) % 2 == 0:
                 screen_boss = True
@@ -389,7 +359,6 @@ while run:
     def time_game():
         global sec, x_slug, vel_slug, screen_slug, score, main, home_screen, slow, screen_boss
         sec = (pygame.time.get_ticks() - t) // 1000
-        
         if not screen_slug and score == 1:
             x_slug = 640
             vel_slug = 2
@@ -400,7 +369,7 @@ while run:
             screen_slug = True
         elif not screen_slug and score == 3:
             screen_boss = True
-        if sec == 60:
+        if sec == 20:
             main = False
             home_screen = True
             slow = True
@@ -425,6 +394,8 @@ while run:
         if not home_screen:
             #define os frames per seconds do jogo
             clock.tick(60)
+            #chama a função mover boss
+            move_boss()
             #desenha o cenario:
             draw_scenario()
             #chama a colisão
@@ -433,8 +404,6 @@ while run:
             draw()
             #chama a funcao de mover o personagem
             move_char()
-            #chama a função mover boss
-            move_boss()
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     main = False
@@ -459,6 +428,8 @@ while run:
             elif slow:
                 #Mostra a tela de tempo acabado
                 win.blit(pygame.image.load("arquivos/lento.png"), (152,130))
+            elif you_win:
+                win.blit(pygame.image.load("arquivos/end.png"), (152,130))
             else:            
                 #Mostra na tela as informações iniciais
                 win.blit(pygame.image.load("arquivos/infos.png"), (152,130))
