@@ -4,7 +4,7 @@
 
 ## Alunos:
 * Simei Thander de Assis Silva
-* Rafael Crisostomos da Silva
+* Rafael Crisostomo da Silva
 
 Para jogar é necessário ter o Pyton instalado no computador.
 
