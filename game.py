@@ -86,7 +86,7 @@ while run:
 
     #colisão
     def collision():
-        global main, home_screen, screen_slug, dead, you_win, score, x_boss, y_boss
+        global main, home_screen, screen_slug, dead, you_win, score, x_boss, y_boss, slow
 
         #Rect do heroi
         char = pygame.image.load("arquivos/player/player-idle/p_right_idle.png")
@@ -103,13 +103,16 @@ while run:
                 y_boss = 480
                 main = False
                 home_screen = True
+                dead = False
+                slow = False
                 you_win = True
-            elif char_rect.collidepoint(x_boss, y_boss+90) == 1:
+                print(dead)
+            if char_rect.collidepoint(x_boss, y_boss+80) == 1 and y_boss < 600:
                 print("morreu pela esquerda")
                 main = False
                 home_screen = True
                 dead = True
-            elif char_rect.collidepoint(x_boss+60, y_boss+55) == 1:
+            if char_rect.collidepoint(x_boss+60, y_boss+55) == 1 and y_boss < 600:
                 print("morreu pela direita")
                 main = False
                 home_screen = True
@@ -273,7 +276,7 @@ while run:
     
     #move o BOSS aleatoriamente
     def move_boss():
-        global screen_boss, boss_cont, x_boss, y_boss, main, home_screen, dead, risada
+        global screen_boss, boss_cont, x_boss, y_boss, main, home_screen, dead, risada, slow
         #Caso o BOSS entre na tela, será incrimentado um contador e utilizado a divisão por inteiro para 24
         if screen_boss:
             if (boss_cont//24) % 2 == 0:
@@ -310,6 +313,7 @@ while run:
             elif (boss_cont//24) == 11 and x_boss < 640 and y_boss < 480:
                 main = False
                 home_screen = True
+                slow = False
                 dead = True  
             #contagem das aparições do BOSS    
             boss_cont +=1   
@@ -360,7 +364,7 @@ while run:
                 jump_count = max_jump
 
     def time_game():
-        global x_slug, vel_slug, screen_slug, main, home_screen, slow, screen_boss
+        global x_slug, vel_slug, screen_slug, main, home_screen, slow, screen_boss, dead
         sec = (pygame.time.get_ticks() - t) // 1000
         if not screen_slug and score == 1:
             x_slug = 640
@@ -375,6 +379,7 @@ while run:
         if sec == 20:
             main = False
             home_screen = True
+            dead = False
             slow = True
 
         time = font.render("Time: " + str(sec) + "s", True, (255,255,255))
