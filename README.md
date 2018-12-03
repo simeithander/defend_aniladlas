@@ -6,7 +6,7 @@
 * Simei Thander de Assis Silva
 * Rafael Crisostomo da Silva
 
-## Como jogar::
+## Como jogar:
 
 Para jogar é necessário ter o Pyton instalado no computador.
 
