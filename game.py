@@ -291,7 +291,6 @@ while run:
                 screen_boss = False
                 x_boss = 550
                 y_boss = 300
-                
             elif (boss_cont//24) == 3:
                 screen_boss = False
                 x_boss = 480
@@ -303,6 +302,7 @@ while run:
             elif (boss_cont//24) == 7:
                 screen_boss = False
                 x_boss = 500
+                y_boss = 355
             elif (boss_cont//24) == 9 and x_boss < 640 and y_boss < 480:
                 screen_boss = False
                 x_boss = 100
