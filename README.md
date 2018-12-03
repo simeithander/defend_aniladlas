@@ -1,5 +1,10 @@
 # Defend Aniladlas
-###### Projeto de jogo em Python para a disciplina Programação de computadores. IFRN-CNAT-TADS
+###### Projeto de jogo em Python para a disciplina Programação de computadores - LEONARDO REIS LUCENA (1193202)
+###### 01404 - Tecnologia em Análise e Desenvolvimento de Sistemas (2018.2) - Campus Natal-Central
+
+## Alunos:
+* Simei Thander de Assis Silva
+* Rafael Crisostomos da Silva
 
 Para jogar é necessário ter o Pyton instalado no computador.
 
