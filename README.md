@@ -1,4 +1,4 @@
-# Defend Aniladlas
+![Screenshot](https://github.com/simeithander/defend_aniladlas/blob/master/arquivos/screenshot/screen.png)
 ###### Projeto de jogo em Python para a disciplina Programação de computadores - LEONARDO REIS LUCENA (1193202)
 ###### 01404 - Tecnologia em Análise e Desenvolvimento de Sistemas (2018.2) - Campus Natal-Central
 
