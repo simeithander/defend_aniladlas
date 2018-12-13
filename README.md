@@ -18,6 +18,8 @@ https://python.org.br/instalacao-windows/
 
 https://python.org.br/instalacao-linux/
 
+###### Como jogar:
+
 Baixe o jogo na aba de Releases:
 https://github.com/simeithander/defend_aniladlas/releases
 
