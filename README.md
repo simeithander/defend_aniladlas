@@ -10,15 +10,15 @@
 
 Para jogar é necessário ter o Pyton instalado no computador.
 
-### Instalação no Windows:
+### Instalação do Python no Windows:
 
 https://python.org.br/instalacao-windows/
 
-### Instalação no Linux:
+### Instalação do Python no Linux:
 
 https://python.org.br/instalacao-linux/
 
-### Como jogar:
+### Executando o jogo:
 
 Baixe o jogo na aba de Releases:
 https://github.com/simeithander/defend_aniladlas/releases
