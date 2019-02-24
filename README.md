@@ -28,3 +28,15 @@ Abra o terminal na pasta do jogo e digite:
 > python3 game.py
 
 Enjoy ;D
+
+## How to play:
+
+1 - Download and install Python interpreter: https://www.python.org/downloads/
+
+2 - Download and unzip file in https://github.com/simeithander/defend_aniladlas/releases
+
+3 - Open the terminal/CMD at the same folder what you unzip the files and type it:
+
+> python3 game.py
+
+Enjoy ;D
